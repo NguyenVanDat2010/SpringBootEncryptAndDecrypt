@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.example.demo.pojo.po.UserPO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+    </resultMap>
+    <sql id="BaseColumn">
+        <if test="id != null">
+            id,
+        </if>
+        username,
+        email,
+        password,
+        image,
+        create_by,
+        create_date,
+        update_by,
+        update_date
+    </sql>
+    <insert id="insert">
+        insert into user(
+        <include refid="BaseColumn"></include>
+        ) values (
+        <if test="id != null">
+            id,
+        </if>
+        #{username}, #{email}, #{password}, #{image}, #{createBy},
+        #{createDate}, #{updateBy}, #{updateDate}
+        )
+        on duplicate key update
+        username = #{username},
+        email = #{email},
+        password = #{password},
+        image = #{image},
+        create_by = #{createBy},
+        create_date = #{createDate},
+        update_by = #{updateBy},
+        update_date = #{updateDate}
+    </insert>
+
+    <select id="getUserByEmail" resultMap="BaseResultMap">
+        select * from user where email = #{email};
+    </select>
+    <select id="getListUserByUsernameAndEmail" resultMap="BaseResultMap">
+        select * from user where username = #{username} and email = #{email};
+    </select>
+</mapper>
