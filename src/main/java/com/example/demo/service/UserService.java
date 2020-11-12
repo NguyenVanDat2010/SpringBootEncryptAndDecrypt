@@ -10,4 +10,6 @@ public interface UserService {
     int insert(UserDTO userDTO);
 
     UserVO getUserByEmail(String email);
+
+    UserVO getUserByUsernameAndEmail(String jsonStr);
 }

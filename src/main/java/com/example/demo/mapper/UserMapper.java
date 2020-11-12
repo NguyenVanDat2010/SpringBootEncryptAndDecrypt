@@ -12,7 +12,9 @@ import java.util.List;
 public interface UserMapper {
     int insert(UserPO userPO);
 
-    UserPO getUserByEmail(@Param("username") String username);
+    UserPO getUserByEmail(@Param("email") String email);
 
-    List<UserPO> getListUserByUsernameAndEmail(@Param("username") String username, @Param("email") String email);
+    UserPO getUserByUsernameAndEmail(@Param("username") String username, @Param("email") String email);
+
+    UserPO getUserByUsername(@Param("username") String username);
 }

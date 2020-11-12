@@ -8,8 +8,8 @@ import com.example.demo.pojo.po.converter.UserPOConverter;
 import com.example.demo.pojo.vo.UserVO;
 import com.example.demo.pojo.vo.converter.UserVOConverter;
 import com.example.demo.service.UserService;
-import com.example.demo.utils.DecryptData;
-import com.example.demo.utils.EncryptData;
+import com.example.demo.utils.crypto.DecryptData;
+import com.example.demo.utils.crypto.EncryptData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -57,6 +57,16 @@ public class UserServiceImpl implements UserService {
         String newEmail = decryptData.decryptData(email);
 
         UserPO userPO = userMapper.getUserByEmail(newEmail);
+        UserVO userVO = userVOConverter.convertToTarget(userPO);
+        return userVO;
+    }
+
+    @Override
+    public UserVO getUserByUsernameAndEmail(String jsonStr) {
+        JSONObject jsonObject =JSONObject.parseObject(jsonStr);
+        String username = (String) jsonObject.get("username");
+        String email = (String) jsonObject.get("email");
+        UserPO userPO = userMapper.getUserByUsernameAndEmail(username, email);
         UserVO userVO = userVOConverter.convertToTarget(userPO);
         return userVO;
     }

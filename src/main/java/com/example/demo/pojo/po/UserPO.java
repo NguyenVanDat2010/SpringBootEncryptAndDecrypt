@@ -1,5 +1,7 @@
 package com.example.demo.pojo.po;
 
+import java.util.List;
+
 public class UserPO {
     private Long id;
     private String username;
@@ -10,6 +12,8 @@ public class UserPO {
     private String createDate;
     private String updateBy;
     private String updateDate;
+    private String roleName;
+    private Long roleId;
 
     public Long getId() {
         return id;
@@ -81,5 +85,21 @@ public class UserPO {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public Long getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 }
