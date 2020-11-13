@@ -1,6 +1,13 @@
 package com.example.demo.filter.jwt;
 
+import com.example.demo.pojo.vo.UserDetailImplVO;
+import com.example.demo.pojo.vo.UserVO;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+
+import java.util.Date;
 
 public class JwtUtils {
     @Value("${security.jwt.uri}")
@@ -17,6 +24,18 @@ public class JwtUtils {
 
     @Value("${security.jwt.secret}")
     private String secret;
+
+    public String generateJwtToken(Authentication authentication){
+        long now = System.currentTimeMillis();
+        UserDetailImplVO userPrincipal = (UserDetailImplVO) authentication.getPrincipal();
+
+        return Jwts.builder()
+                .setSubject((userPrincipal.getUsername()))
+                .setIssuedAt(new Date(now))
+                .setExpiration(new Date(now + expiration * 1000))
+                .signWith(SignatureAlgorithm.HS512, secret.getBytes())
+                .compact();
+    }
 
     public String getUri() {
         return uri;

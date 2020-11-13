@@ -12,8 +12,8 @@ public class UserPO {
     private String createDate;
     private String updateBy;
     private String updateDate;
-    private String roleName;
     private Long roleId;
+    private String roleName;
 
     public Long getId() {
         return id;

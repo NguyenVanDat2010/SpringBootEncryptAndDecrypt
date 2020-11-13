@@ -2,10 +2,12 @@ package com.example.demo.config;
 
 import com.example.demo.filter.jwt.AuthEntryPointJwt;
 import com.example.demo.filter.jwt.JwtAuthTokenFilter;
+//import com.example.demo.filter.jwt.JwtUsernameAndPasswordAuthenticationAndGenerateTokenFilter;
 import com.example.demo.filter.jwt.JwtUtils;
 import com.example.demo.service.impl.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,6 +31,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtUtils jwtUtils;
 
     @Bean
+    public JwtUtils jwtUtils(){
+        return new JwtUtils();
+    }
+
+    @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
@@ -47,12 +54,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().antMatchers("/api/**").permitAll()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilterAfter(jwtAuthTokenFilter(), UsernamePasswordAuthenticationFilter.class)
+//                .addFilter(new JwtUsernameAndPasswordAuthenticationAndGenerateTokenFilter(authenticationManager(), jwtUtils))
+                .authorizeRequests().antMatchers(HttpMethod.POST, jwtUtils.getUri()).permitAll()
                 .anyRequest().authenticated();
 
-        http.addFilterBefore(jwtAuthTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(jwtAuthTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
